@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>radj307</Authors>
+    <Authors>bbougot, Jackjan4, radj307</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/radj307/WPFAcrylics</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
