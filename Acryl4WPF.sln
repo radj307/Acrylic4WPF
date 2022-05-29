@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFAcrylicBrush", "WPFAcrylicBrush\WPFAcrylicBrush.csproj", "{25A3CB6D-FB2B-4129-B7E3-FBA5F8C627A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFAcrylics", "WPFAcrylicBrush\WPFAcrylics.csproj", "{25A3CB6D-FB2B-4129-B7E3-FBA5F8C627A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{65F4A569-0ABF-4D1D-9E71-BB637D22FD8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "WpfApp1\TestApp.csproj", "{65F4A569-0ABF-4D1D-9E71-BB637D22FD8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

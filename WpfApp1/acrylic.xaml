@@ -1,10 +1,9 @@
-﻿<ac:AcrylWindow
+<local:AcrylWindow
     x:Class="WpfApp1.acrylic"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ac="clr-namespace:WPFAcrylicBrush;assembly=WPFAcrylicBrush"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:WpfApp1"
+    xmlns:local="clr-namespace:WPFAcrylics;assembly=WPFAcrylics"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="acrylic"
     WindowStyle="None"
@@ -23,4 +22,4 @@
             <Border />
         </Grid>
     </Grid>
-</ac:AcrylWindow>
+</local:AcrylWindow>

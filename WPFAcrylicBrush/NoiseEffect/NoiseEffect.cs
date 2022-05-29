@@ -5,7 +5,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 
 
-namespace WPFAcrylicBrush.NoiseEffect
+namespace WPFAcrylics.NoiseEffect
 {
     public class NoiseEffect : ShaderEffect
     {
@@ -16,12 +16,12 @@ namespace WPFAcrylicBrush.NoiseEffect
         {
             var pixelShader = new PixelShader
             {
-                UriSource = new Uri("/WPFAcrylicBrush;component/NoiseEffect/Noise.ps", UriKind.Relative)
+                UriSource = new Uri($"/{AssemblyName.GetName};component/NoiseEffect/Noise.ps", UriKind.Relative)
             };
             PixelShader = pixelShader;
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
-            bitmap.UriSource = new Uri("pack://application:,,,/WPFAcrylicBrush;component/Resources/Images/noise.png");
+            bitmap.UriSource = new Uri($"pack://application:,,,/{AssemblyName.GetName};component/Resources/Images/noise.png");
             bitmap.EndInit();
             RandomInput =
                 new ImageBrush(bitmap)

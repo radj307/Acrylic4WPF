@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>radj307</Authors>
   </PropertyGroup>
 
   <ItemGroup>

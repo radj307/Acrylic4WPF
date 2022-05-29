@@ -8,11 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SolidShineUi" Version="1.9.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\WPFAcrylicBrush\WPFAcrylicBrush.csproj" />
+    <ProjectReference Include="..\WPFAcrylicBrush\WPFAcrylics.csproj" />
   </ItemGroup>
 
 </Project>
