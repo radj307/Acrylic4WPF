@@ -3,11 +3,8 @@
     /// <summary>
     /// Interaction logic for acrylic.xaml
     /// </summary>
-    public partial class acrylic : WPFAcrylics.AcrylWindow
+    public partial class acrylic : WPFAcrylics.BasicAcrylWindow
     {
-        public acrylic()
-        {
-            InitializeComponent();
-        }
+        private void WindowClose(object sender, System.Windows.RoutedEventArgs e) => Close();
     }
 }

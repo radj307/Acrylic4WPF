@@ -17,6 +17,42 @@ The project is made with .NET Framework 4.6.1.
 
 ## Usage
 
+**Notes**
+
+- Can only be used with `WindowStyle.None`
+
+
+Add the namespace in your `xaml`:
+
+```xaml
+<acryl:AcrylWindow
+    x:Class="WpfApp1.acrylic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:acryl="clr-namespace:WPFAcrylics;assembly=WPFAcrylics"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="acrylic"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <AcrylWindow.Resources>
+    </AcrylWindow.Resources>
+
+
+    <!-- Here we use WindowChrome to create a custom caption bar -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="20" ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=""/>
+        </Grid.RowDefinitions>
+
+    <Grid>
+</acryl:AcrylWindow>
+```
+
 When creating a new window in WPF, instead of extending the ````Window```` class you should extend the ````AcrylWindow```` class. You need to to this both in XAML and in Code.
 Styling your other controls like buttons etc. to look acrylic compatible has to be done by yourself, however most work is already done by removing borders and setting transparent backgrounds.
 
