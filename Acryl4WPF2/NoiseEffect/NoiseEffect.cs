@@ -9,8 +9,8 @@ namespace Acrylic4WPF.NoiseEffect
 {
     public class NoiseEffect : ShaderEffect
     {
-        public static readonly DependencyProperty InputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(NoiseEffect), 0);
-        public static readonly DependencyProperty RandomInputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("RandomInput", typeof(NoiseEffect), 1);
+        public static readonly DependencyProperty InputProperty = RegisterPixelShaderSamplerProperty("Input", typeof(NoiseEffect), 0);
+        public static readonly DependencyProperty RandomInputProperty = RegisterPixelShaderSamplerProperty("RandomInput", typeof(NoiseEffect), 1);
         public static readonly DependencyProperty RatioProperty = DependencyProperty.Register("Ratio", typeof(double), typeof(NoiseEffect), new UIPropertyMetadata(((double)(0.5D)), PixelShaderConstantCallback(0)));
         public NoiseEffect()
         {
@@ -24,7 +24,7 @@ namespace Acrylic4WPF.NoiseEffect
             this.RandomInput =
                 new ImageBrush(bitmap)
                     {
-                        TileMode = System.Windows.Media.TileMode.Tile,
+                        TileMode = TileMode.Tile,
                         Viewport = new Rect(0, 0, 800, 600),
                         ViewportUnits = BrushMappingMode.Absolute
                     };

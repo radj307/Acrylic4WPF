@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,9 +11,11 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 
 
-namespace Acrylic4WPF {
+namespace WPFAcrylicBrush
+{
 
-    internal enum AccentState {
+    internal enum AccentState
+    {
         ACCENT_DISABLED = 1,
         ACCENT_ENABLE_GRADIENT = 0,
         ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
@@ -21,7 +24,8 @@ namespace Acrylic4WPF {
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct AccentPolicy {
+    internal struct AccentPolicy
+    {
         public AccentState AccentState;
         public int AccentFlags;
         public int GradientColor;
@@ -29,13 +33,15 @@ namespace Acrylic4WPF {
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct WindowCompositionAttributeData {
+    internal struct WindowCompositionAttributeData
+    {
         public WindowCompositionAttribute Attribute;
         public IntPtr Data;
         public int SizeOfData;
     }
 
-    internal enum WindowCompositionAttribute {
+    internal enum WindowCompositionAttribute
+    {
         // ...
         WCA_ACCENT_POLICY = 19
         // ...
@@ -45,16 +51,19 @@ namespace Acrylic4WPF {
     /// <summary>
     /// 
     /// </summary>
-    public class AcrylWindow : Window, INotifyPropertyChanged {
+    public class AcrylWindow : Window, INotifyPropertyChanged
+    {
         // ===== Blur things ========
 
         [DllImport("user32.dll")]
         internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
-        internal void EnableBlur() {
-            WindowInteropHelper windowHelper = new WindowInteropHelper(this);
+        internal void EnableBlur()
+        {
+            var windowHelper = new WindowInteropHelper(this);
 
-            AccentPolicy accent = new AccentPolicy {
+            var accent = new AccentPolicy
+            {
                 AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
             };
 
@@ -63,7 +72,8 @@ namespace Acrylic4WPF {
             IntPtr accentPtr = Marshal.AllocHGlobal(accentStructSize);
             Marshal.StructureToPtr(accent, accentPtr, false);
 
-            WindowCompositionAttributeData data = new WindowCompositionAttributeData {
+            var data = new WindowCompositionAttributeData
+            {
                 Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
                 SizeOfData = accentStructSize,
                 Data = accentPtr
@@ -79,26 +89,30 @@ namespace Acrylic4WPF {
         /// <summary>
         /// Property for changing the color of the TransparentBackground
         /// </summary>
-        public Brush TransparentBackground {
+        public Brush? TransparentBackground
+        {
             get => _transparentBackground;
-            set {
+            set
+            {
                 _transparentBackground = value;
-                OnPropertyChanged("TransparentBackground");
+                OnPropertyChanged();
             }
         }
 
-        private Brush _transparentBackground;
+        private Brush? _transparentBackground = null;
 
 
 
         /// <summary>
         /// Changes the opacity of the Acrylic transparent background
         /// </summary>
-        public double AcrylOpacity {
+        public double AcrylOpacity
+        {
             get => _acrylOpacity;
-            set {
+            set
+            {
                 _acrylOpacity = value;
-                OnPropertyChanged("AcrylOpacity");
+                OnPropertyChanged();
             }
         }
 
@@ -109,11 +123,13 @@ namespace Acrylic4WPF {
         /// <summary>
         /// 
         /// </summary>
-        public Visibility ShowMinimizeButton {
+        public Visibility ShowMinimizeButton
+        {
             get => _showMinimizeButton;
-            set {
+            set
+            {
                 _showMinimizeButton = value;
-                OnPropertyChanged("ShowMinimizeButton");
+                OnPropertyChanged();
             }
         }
 
@@ -124,11 +140,13 @@ namespace Acrylic4WPF {
         /// <summary>
         /// 
         /// </summary>
-        public Visibility ShowFullscreenButton {
+        public Visibility ShowFullscreenButton
+        {
             get => _showFullscreenButton;
-            set {
+            set
+            {
                 _showFullscreenButton = value;
-                OnPropertyChanged("ShowFullscreenButton");
+                OnPropertyChanged();
             }
         }
 
@@ -139,11 +157,13 @@ namespace Acrylic4WPF {
         /// <summary>
         /// 
         /// </summary>
-        public Visibility ShowCloseButton {
+        public Visibility ShowCloseButton
+        {
             get => _showCloseButton;
-            set {
+            set
+            {
                 _showCloseButton = value;
-                OnPropertyChanged("ShowCloseButton");
+                OnPropertyChanged();
             }
         }
 
@@ -154,11 +174,13 @@ namespace Acrylic4WPF {
         /// <summary>
         /// 
         /// </summary>
-        public double NoiseRatio {
+        public double NoiseRatio
+        {
             get => _noiseRatio;
-            set {
+            set
+            {
                 _noiseRatio = value;
-                OnPropertyChanged("NoiseRatio");
+                OnPropertyChanged();
             }
         }
         private double _noiseRatio;
@@ -168,11 +190,9 @@ namespace Acrylic4WPF {
         /// <summary>
         /// Event implementation
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void OnPropertyChanged(string info) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-        }
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new(propertyName));
 
 
 
@@ -185,15 +205,17 @@ namespace Acrylic4WPF {
         /// <summary>
         /// Constructor
         /// </summary>
-        public AcrylWindow() {
+        public AcrylWindow()
+        {
             Loaded += MainWindow_Loaded;
-            SourceInitialized += new EventHandler(win_SourceInitialized);
+            SourceInitialized += Win_SourceInitialized;
 
             AcrylOpacity = 0.6;
             _contentGrid = new Grid();
             Grid.SetRow(_contentGrid, 1);
             _internalGridName = "internalMainGrid";
-            _mainGrid = new Grid {
+            _mainGrid = new Grid
+            {
                 Name = _internalGridName
             };
 
@@ -211,9 +233,11 @@ namespace Acrylic4WPF {
         /// </summary>
         /// <param name="arg1">The old content</param>
         /// <param name="arg2">The new content</param>
-        protected override void OnContentChanged(object arg1, object arg2) {
+        protected override void OnContentChanged(object arg1, object arg2)
+        {
             // Do nothing if this is the initialize call
-            if (arg2 is Grid grid && grid.Name == _internalGridName) {
+            if (arg2 is Grid grid && grid.Name == _internalGridName)
+            {
                 return;
             }
 
@@ -228,10 +252,12 @@ namespace Acrylic4WPF {
         /// 
         /// </summary>
         /// <returns></returns>
-        private Grid BuildBaseWindow() {
+        private Grid BuildBaseWindow()
+        {
 
             // Transparent effect rectangle
-            Rectangle rect = new Rectangle {
+            var rect = new Rectangle
+            {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
             };
@@ -251,7 +277,7 @@ namespace Acrylic4WPF {
             });
 
             // Add the noise effect to the rectangle
-            NoiseEffect.NoiseEffect fx = new NoiseEffect.NoiseEffect();
+            var fx = new NoiseEffect.NoiseEffect();
             _ = BindingOperations.SetBinding(fx, NoiseEffect.NoiseEffect.RatioProperty, new Binding
             {
                 Path = new PropertyPath("NoiseRatio"),
@@ -264,16 +290,17 @@ namespace Acrylic4WPF {
 
             _ = _mainGrid.Children.Add(rect);
 
-            Grid windowGrid = new Grid();
-            windowGrid.RowDefinitions.Add(new RowDefinition {
-                MaxHeight = 30
-            });
+            var windowGrid = new Grid();
+            //windowGrid.RowDefinitions.Add(new RowDefinition
+            //{
+            //    MaxHeight = 30
+            //});
             windowGrid.RowDefinitions.Add(new RowDefinition());
             _ = _mainGrid.Children.Add(windowGrid);
 
-            Grid titleBar = BuildTitleBar();
+            //Grid titleBar = BuildTitleBar();
 
-            _ = windowGrid.Children.Add(titleBar);
+            //_ = windowGrid.Children.Add(titleBar);
             _ = windowGrid.Children.Add(_contentGrid);
             return _mainGrid;
         }
@@ -284,10 +311,12 @@ namespace Acrylic4WPF {
         /// 
         /// </summary>
         /// <returns></returns>
-        private Grid BuildTitleBar() {
+        private Grid BuildTitleBar()
+        {
 
             // Build the close button
-            Button closeButton = new Button {
+            var closeButton = new Button
+            {
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Content = "\uE711",
                 FontSize = 14,
@@ -307,7 +336,8 @@ namespace Acrylic4WPF {
 
 
             // Build the maximize/reset button
-            Button fullscreenButton = new Button {
+            var fullscreenButton = new Button
+            {
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Content = "\uE922",
                 FontSize = 12,
@@ -324,12 +354,15 @@ namespace Acrylic4WPF {
             });
             Grid.SetColumn(fullscreenButton, 1);
 
-            fullscreenButton.Click += (x, y) => {
-                if (_nowFullScreen) {
+            fullscreenButton.Click += (x, y) =>
+            {
+                if (_nowFullScreen)
+                {
                     WindowState = WindowState.Normal;
                     _nowFullScreen = false;
                 }
-                else {
+                else
+                {
                     WindowState = WindowState.Maximized;
                     _nowFullScreen = true;
                 }
@@ -338,7 +371,8 @@ namespace Acrylic4WPF {
 
 
             // Build the minimize button
-            Button minimizeButton = new Button {
+            var minimizeButton = new Button
+            {
                 HorizontalAlignment = HorizontalAlignment.Right,
                 Content = "\uE921",
                 FontSize = 12,
@@ -356,37 +390,45 @@ namespace Acrylic4WPF {
             Grid.SetColumn(minimizeButton, 0);
             minimizeButton.Click += (x, y) => WindowState = WindowState.Minimized;
 
-            Grid titleBar = new Grid {
+            var titleBar = new Grid
+            {
                 MaxHeight = 30
             };
-            Grid titleBarButtons = new Grid {
+            var titleBarButtons = new Grid
+            {
                 MaxHeight = 30,
                 HorizontalAlignment = HorizontalAlignment.Right
             };
-            titleBarButtons.ColumnDefinitions.Add(new ColumnDefinition {
+            titleBarButtons.ColumnDefinitions.Add(new ColumnDefinition
+            {
                 Width = GridLength.Auto
             });
-            titleBarButtons.ColumnDefinitions.Add(new ColumnDefinition {
+            titleBarButtons.ColumnDefinitions.Add(new ColumnDefinition
+            {
                 Width = GridLength.Auto
             });
-            titleBarButtons.ColumnDefinitions.Add(new ColumnDefinition {
+            titleBarButtons.ColumnDefinitions.Add(new ColumnDefinition
+            {
                 Width = GridLength.Auto
             });
 
 
             // Build the drag button - workaround for still dragging/double clicking the window
-            Button dragButton = new Button {
+            var dragButton = new Button
+            {
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 Foreground = Brushes.Transparent
             };
-            ResourceDictionary res = new ResourceDictionary {
-                Source = new Uri("/Acrylic4WPF;component/XAML/StyleResources.xaml", UriKind.RelativeOrAbsolute)
+            var res = new ResourceDictionary
+            {
+                Source = new Uri("/WPFAcrylicBrush;component/XAML/StyleResources.xaml", UriKind.RelativeOrAbsolute)
             };
             dragButton.Style = res["NoHoverStyle"] as Style;
-            dragButton.PreviewMouseLeftButtonDown += (sender, e) => {
+            dragButton.PreviewMouseLeftButtonDown += (sender, e) =>
+            {
                 DragMove();
                 if (e.ClickCount == 2)
                     OnTitleBarDoubleClick();
@@ -394,14 +436,18 @@ namespace Acrylic4WPF {
 
             int frames = 0;
             bool inDrag = false;
-            dragButton.PreviewMouseMove += (sender, e) => {
-                if (inDrag && e.LeftButton == MouseButtonState.Pressed) {
+            dragButton.PreviewMouseMove += (sender, e) =>
+            {
+                if (inDrag && e.LeftButton == MouseButtonState.Pressed)
+                {
                     DragMove();
                     inDrag = false;
                     return;
                 }
-                if (e.LeftButton == MouseButtonState.Pressed && _nowFullScreen) {
-                    if (frames == 3) {
+                if (e.LeftButton == MouseButtonState.Pressed && _nowFullScreen)
+                {
+                    if (frames == 3)
+                    {
                         Point p = Mouse.GetPosition(this);
                         WindowState = WindowState.Normal;
                         Top = p.Y - 5;
@@ -410,11 +456,13 @@ namespace Acrylic4WPF {
                         DragMove();
                         inDrag = true;
                     }
-                    else {
+                    else
+                    {
                         frames++;
                     }
                 }
-                else if (e.LeftButton == MouseButtonState.Released) {
+                else if (e.LeftButton == MouseButtonState.Released)
+                {
                     frames = 0;
                 }
             };
@@ -434,12 +482,15 @@ namespace Acrylic4WPF {
         /// <summary>
         /// 
         /// </summary>
-        private void OnTitleBarDoubleClick() {
-            if (_nowFullScreen) {
+        private void OnTitleBarDoubleClick()
+        {
+            if (_nowFullScreen)
+            {
                 WindowState = WindowState.Normal;
                 _nowFullScreen = false;
             }
-            else {
+            else
+            {
                 WindowState = WindowState.Maximized;
                 _nowFullScreen = true;
             }
@@ -455,9 +506,7 @@ namespace Acrylic4WPF {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
-            EnableBlur();
-        }
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e) => EnableBlur();
 
 
 
@@ -477,28 +526,32 @@ namespace Acrylic4WPF {
               int msg,
               IntPtr wParam,
               IntPtr lParam,
-              ref bool handled) {
-            switch (msg) {
-                case 0x0024:
-                    WmGetMinMaxInfo(hwnd, lParam);
-                    handled = true;
-                    break;
+              ref bool handled)
+        {
+            switch (msg)
+            {
+            case 0x0024:
+                WmGetMinMaxInfo(hwnd, lParam);
+                handled = true;
+                break;
             }
 
             return (IntPtr)0;
         }
 
-        private static void WmGetMinMaxInfo(System.IntPtr hwnd, System.IntPtr lParam) {
+        private static void WmGetMinMaxInfo(System.IntPtr hwnd, System.IntPtr lParam)
+        {
 
-            MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+            MINMAXINFO mmi = Marshal.PtrToStructure<MINMAXINFO>(lParam);
 
             // Adjust the maximized size and position to fit the work area of the correct monitor
             int MONITOR_DEFAULTTONEAREST = 0x00000002;
             System.IntPtr monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
 
-            if (monitor != IntPtr.Zero) {
+            if (monitor != IntPtr.Zero)
+            {
 
-                MONITORINFO monitorInfo = new MONITORINFO();
+                var monitorInfo = new MONITORINFO();
                 _ = GetMonitorInfo(monitor, monitorInfo);
                 RECT rcWorkArea = monitorInfo.rcWork;
                 RECT rcMonitorArea = monitorInfo.rcMonitor;
@@ -516,7 +569,8 @@ namespace Acrylic4WPF {
         /// POINT aka POINTAPI
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct POINT {
+        public struct POINT
+        {
             /// <summary>
             /// x coordinate of point.
             /// </summary>
@@ -529,14 +583,16 @@ namespace Acrylic4WPF {
             /// <summary>
             /// Construct a point of coordinates (x,y).
             /// </summary>
-            public POINT(int x, int y) {
+            public POINT(int x, int y)
+            {
                 this.x = x;
                 this.y = y;
             }
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MINMAXINFO {
+        public struct MINMAXINFO
+        {
             public POINT ptReserved;
             public POINT ptMaxSize;
             public POINT ptMaxPosition;
@@ -548,18 +604,19 @@ namespace Acrylic4WPF {
         /// <summary>
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public class MONITORINFO {
+        public class MONITORINFO
+        {
             /// <summary>
             /// </summary>            
             public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
 
             /// <summary>
             /// </summary>            
-            public RECT rcMonitor = new RECT();
+            public RECT rcMonitor = new();
 
             /// <summary>
             /// </summary>            
-            public RECT rcWork = new RECT();
+            public RECT rcWork = new();
 
             /// <summary>
             /// </summary>            
@@ -569,7 +626,8 @@ namespace Acrylic4WPF {
 
         /// <summary> Win32 </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        public struct RECT {
+        public struct RECT
+        {
             /// <summary> Win32 </summary>
             public int left;
             /// <summary> Win32 </summary>
@@ -580,19 +638,16 @@ namespace Acrylic4WPF {
             public int bottom;
 
             /// <summary> Win32 </summary>
-            public static readonly RECT Empty = new RECT();
+            public static readonly RECT Empty = new();
 
             /// <summary> Win32 </summary>
-            public int Width {
-                get { return Math.Abs(right - left); }  // Abs needed for BIDI OS
-            }
+            public int Width => Math.Abs(right - left);
             /// <summary> Win32 </summary>
-            public int Height {
-                get { return bottom - top; }
-            }
+            public int Height => bottom - top;
 
             /// <summary> Win32 </summary>
-            public RECT(int left, int top, int right, int bottom) {
+            public RECT(int left, int top, int right, int bottom)
+            {
                 this.left = left;
                 this.top = top;
                 this.right = right;
@@ -601,47 +656,37 @@ namespace Acrylic4WPF {
 
 
             /// <summary> Win32 </summary>
-            public RECT(RECT rcSrc) {
-                this.left = rcSrc.left;
-                this.top = rcSrc.top;
-                this.right = rcSrc.right;
-                this.bottom = rcSrc.bottom;
+            public RECT(RECT rcSrc)
+            {
+                left = rcSrc.left;
+                top = rcSrc.top;
+                right = rcSrc.right;
+                bottom = rcSrc.bottom;
             }
 
             /// <summary> Win32 </summary>
-            public bool IsEmpty {
-                get {
+            public bool IsEmpty =>
                     // BUGBUG : On Bidi OS (hebrew arabic) left > right
-                    return left >= right || top >= bottom;
-                }
-            }
+                    left >= right || top >= bottom;
             /// <summary> Return a user friendly representation of this struct </summary>
-            public override string ToString() {
+            public override string ToString()
+            {
                 if (this == Empty) { return "RECT {Empty}"; }
                 return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
             }
 
             /// <summary> Determine if 2 RECT are equal (deep compare) </summary>
-            public override bool Equals(object obj) {
-                if (!(obj is Rect)) { return false; }
-                return (this == (RECT)obj);
-            }
+            public override bool Equals(object? obj) => obj is Rect && this == (RECT)obj;
 
             /// <summary>Return the HashCode for this struct (not garanteed to be unique)</summary>
-            public override int GetHashCode() {
-                return left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();
-            }
+            public override int GetHashCode() => left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();
 
 
             /// <summary> Determine if 2 RECT are equal (deep compare)</summary>
-            public static bool operator ==(RECT rect1, RECT rect2) {
-                return (rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom);
-            }
+            public static bool operator ==(RECT rect1, RECT rect2) => (rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom);
 
             /// <summary> Determine if 2 RECT are different(deep compare)</summary>
-            public static bool operator !=(RECT rect1, RECT rect2) {
-                return !(rect1 == rect2);
-            }
+            public static bool operator !=(RECT rect1, RECT rect2) => !(rect1 == rect2);
 
 
         }
@@ -649,17 +694,14 @@ namespace Acrylic4WPF {
         [DllImport("user32")]
         internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
-        /// <summary>
-        /// 
-        /// </summary>
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
 
-
-        void win_SourceInitialized(object sender, EventArgs e) {
-            System.IntPtr handle = (new System.Windows.Interop.WindowInteropHelper(this)).Handle;
-            HwndSource.FromHwnd(handle).AddHook(new System.Windows.Interop.HwndSourceHook(WindowProc));
+        private void Win_SourceInitialized(object? sender, EventArgs e)
+        {
+            IntPtr handle = (new WindowInteropHelper(this)).Handle;
+            HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
         }
 
     }
-    }
+}
