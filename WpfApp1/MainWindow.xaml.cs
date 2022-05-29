@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 
-namespace WpfApp1
+namespace TestApp
 {
-    public static class Statics
-    {
-        public static IEnumerable<WindowStyle> WindowStyles = Enum.GetValues<WindowStyle>().AsEnumerable();
-    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : WPFAcrylics.BasicAcrylWindow
     {
         public MainWindow()
         {
             InitializeComponent();
         }
-
-        private acrylic TestWindow => (FindResource("TestWindow") as acrylic)!;
-
-        private void HideClick(object? sender, RoutedEventArgs e) => TestWindow.Hide();
-        private void ShowClick(object? sender, RoutedEventArgs e) => TestWindow.Show();
         private void CloseClick(object? sender, RoutedEventArgs e) => Close();
+
+        private TestWindow1 Basic => (FindResource("BasicAcrylWindow") as TestWindow1)!;
+        private void ShowBasic(object? sender, RoutedEventArgs e) => Basic.Show();
+        private void HideBasic(object? sender, RoutedEventArgs e) => Basic.Hide();
+
+        private TestWindow2 Normal => (FindResource("AcrylWindow") as TestWindow2)!;
+        private void ShowNormal(object? sender, RoutedEventArgs e) => Normal.Show();
+        private void HideNormal(object? sender, RoutedEventArgs e) => Normal.Hide();
     }
 }

@@ -1,14 +1,19 @@
-﻿<Window
-    x:Class="WpfApp1.MainWindow"
+<ac:BasicAcrylWindow
+    x:Class="TestApp.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ac="clr-namespace:WPFAcrylics;assembly=WPFAcrylics"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:WpfApp1"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="window"
     Title="MainWindow"
+    Width="300"
+    Height="250"
+    AcrylOpacity="0.5"
     AllowsTransparency="True"
-    ResizeMode="NoResize"
-    SizeToContent="WidthAndHeight"
+    ResizeMode="CanResize"
+    SizeToContent="Height"
+    Topmost="True"
     WindowStyle="None"
     mc:Ignorable="d">
 
@@ -21,7 +26,7 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Background="#303030">
+        <Border Background="#50303030">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -42,53 +47,48 @@
                     WindowChrome.IsHitTestVisibleInChrome="True" />
             </Grid>
         </Border>
-        <StackPanel Grid.Row="1" Margin="5">
-            <Button
-                Margin="3"
-                Click="HideClick"
-                Content="Hide" />
-            <Button
-                Margin="3"
-                Click="ShowClick"
-                Content="Show" />
-
-            <ComboBox ItemsSource="{x:Static local:Statics.WindowStyles}" SelectedItem="{Binding WindowStyle, Mode=TwoWay, Source={StaticResource TestWindow}, UpdateSourceTrigger=PropertyChanged}" />
-            <Grid Height="100" Background="#00303030">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="50" />
-                </Grid.ColumnDefinitions>
-                <Label Content="Width" />
+        <Border
+            Grid.Row="1"
+            Padding="3"
+            BorderBrush="Gainsboro"
+            BorderThickness="2">
+            <StackPanel Margin="5">
+                <Label Content="Basic Acryl Window" Foreground="WhiteSmoke" />
+                <UniformGrid Columns="2" Rows="1">
+                    <Button
+                        Margin="3"
+                        Click="ShowBasic"
+                        Content="Show" />
+                    <Button
+                        Margin="3"
+                        Click="HideBasic"
+                        Content="Hide" />
+                </UniformGrid>
+                <Label Content="Acryl Window" Foreground="WhiteSmoke" />
+                <UniformGrid Columns="2" Rows="1">
+                    <Button
+                        Margin="3"
+                        Click="ShowNormal"
+                        Content="Show" />
+                    <Button
+                        Margin="3"
+                        Click="HideNormal"
+                        Content="Hide" />
+                </UniformGrid>
+                <Border
+                    Margin="0,3"
+                    BorderBrush="LightGray"
+                    BorderThickness="0,1" />
+                <Label Content="AcrylOpacity" Foreground="WhiteSmoke" />
                 <Slider
-                    Grid.Column="1"
                     Margin="3"
-                    HorizontalAlignment="Right"
-                    Maximum="1000"
-                    Minimum="10"
-                    Orientation="Vertical"
-                    Value="{Binding Width, Source={StaticResource TestWindow}, UpdateSourceTrigger=PropertyChanged}" />
-                <Slider
-                    Grid.Column="2"
-                    Margin="3"
-                    Maximum="1000"
-                    Minimum="10"
-                    Orientation="Vertical"
-                    Value="{Binding Height, Source={StaticResource TestWindow}, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Grid.Column="3" Content="Height" />
-            </Grid>
-            <Border BorderBrush="Gray" BorderThickness="0,1" />
-            <Label Content="Acrylic Opacity" />
-            <Slider
-                Margin="0,2"
-                Foreground="Gray"
-                IsSnapToTickEnabled="True"
-                Maximum="1"
-                Minimum="0"
-                TickFrequency="0.05"
-                TickPlacement="BottomRight"
-                Value="{Binding AcrylOpacity, Source={StaticResource TestWindow}, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
+                    HorizontalAlignment="Stretch"
+                    Foreground="WhiteSmoke"
+                    Maximum="1"
+                    Minimum="0"
+                    Orientation="Horizontal"
+                    Value="{Binding AcrylOpacity, ElementName=window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </Border>
     </Grid>
-</Window>
+</ac:BasicAcrylWindow>
