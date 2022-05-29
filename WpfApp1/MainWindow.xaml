@@ -88,6 +88,14 @@
                     Minimum="0"
                     Orientation="Horizontal"
                     Value="{Binding AcrylOpacity, ElementName=window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Slider
+                    Margin="3"
+                    HorizontalAlignment="Stretch"
+                    Foreground="WhiteSmoke"
+                    Maximum="1"
+                    Minimum="0"
+                    Orientation="Horizontal"
+                    Value="{Binding NoiseRatio, ElementName=window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </Border>
     </Grid>

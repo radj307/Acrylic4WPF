@@ -51,11 +51,21 @@
                 FontWeight="Black"
                 WindowChrome.IsHitTestVisibleInChrome="True" />
         </Grid>
-        <Slider
-            Grid.Row="1"
-            Foreground="WhiteSmoke"
-            Maximum="1"
-            Minimum="0"
-            Value="{Binding AcrylOpacity, ElementName=window, UpdateSourceTrigger=PropertyChanged}" />
+        <StackPanel Grid.Row="1">
+            <Slider
+                Foreground="WhiteSmoke"
+                Maximum="1"
+                Minimum="0"
+                Value="{Binding AcrylOpacity, ElementName=window, UpdateSourceTrigger=PropertyChanged}" />
+            <Slider
+                Margin="3"
+                HorizontalAlignment="Stretch"
+                Foreground="WhiteSmoke"
+                Maximum="1"
+                Minimum="0"
+                Orientation="Horizontal"
+                Value="{Binding NoiseRatio, ElementName=window, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        </StackPanel>
     </Grid>
 </ac:BasicAcrylWindow>
