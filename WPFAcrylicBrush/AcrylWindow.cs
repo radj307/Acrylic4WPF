@@ -9,7 +9,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
+using WPFAcrylics.Enums;
+using WPFAcrylics.Helpers;
+using WPFAcrylics.Structs;
 
 namespace WPFAcrylics
 {
@@ -468,7 +470,7 @@ namespace WPFAcrylics
 
         private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
         {
-            var mmi = Marshal.PtrToStructure<MINMAXINFO>(lParam);
+            MINMAXINFO mmi = Marshal.PtrToStructure<MINMAXINFO>(lParam);
 
             // Adjust the maximized size and position to fit the work area of the correct monitor
             int MONITOR_DEFAULTTONEAREST = 0x00000002;

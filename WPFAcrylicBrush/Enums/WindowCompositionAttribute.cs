@@ -1,4 +1,4 @@
-﻿namespace WPFAcrylics
+﻿namespace WPFAcrylics.Enums
 {
     internal enum WindowCompositionAttribute
     {

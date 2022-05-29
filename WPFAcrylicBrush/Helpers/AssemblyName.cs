@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace WPFAcrylics
+namespace WPFAcrylics.Helpers
 {
     internal static class AssemblyName
     {

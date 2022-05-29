@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using WPFAcrylics.Enums;
 
 
-namespace WPFAcrylics
+namespace WPFAcrylics.Structs
 {
     [StructLayout(LayoutKind.Sequential)]
     internal struct WindowCompositionAttributeData

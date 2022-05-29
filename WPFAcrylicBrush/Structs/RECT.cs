@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 
 
-namespace WPFAcrylics
+namespace WPFAcrylics.Structs
 {
     /// <summary> Win32 </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 0)]
@@ -52,15 +52,13 @@ namespace WPFAcrylics
         /// <summary> Return a user friendly representation of this struct </summary>
         public override string ToString()
         {
-            if (this == Empty) { return "RECT {Empty}"; }
-            return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
+            if (this == Empty) return "RECT {Empty}"; return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
         }
 
         /// <summary> Determine if 2 RECT are equal (deep compare) </summary>
         public override bool Equals(object obj)
         {
-            if (!(obj is Rect)) { return false; }
-            return (this == (RECT)obj);
+            if (!(obj is Rect)) return false; return this == (RECT)obj;
         }
 
         /// <summary>Return the HashCode for this struct (not garanteed to be unique)</summary>
@@ -68,7 +66,7 @@ namespace WPFAcrylics
 
 
         /// <summary> Determine if 2 RECT are equal (deep compare)</summary>
-        public static bool operator ==(RECT rect1, RECT rect2) => (rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom);
+        public static bool operator ==(RECT rect1, RECT rect2) => rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom;
 
         /// <summary> Determine if 2 RECT are different(deep compare)</summary>
         public static bool operator !=(RECT rect1, RECT rect2) => !(rect1 == rect2);

@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
 
-namespace WPFAcrylics
+namespace WPFAcrylics.Structs
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct MINMAXINFO
