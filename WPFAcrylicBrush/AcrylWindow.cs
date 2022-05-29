@@ -9,10 +9,55 @@ using System.Windows.Shapes;
 
 namespace WPFAcrylics
 {
+    /// <summary>
+    /// A <see cref="Window"/> derivative that adds an acrylic blur effect to the window background.<br/>
+    /// This variant of <see cref="BasicAcrylWindow"/> comes with a replica of the Windows 10 titlebar, and some properties to control it.
+    /// </summary>
     public class AcrylWindow : BasicAcrylWindow
     {
+        #region Fields
         private bool _nowFullScreen = false;
+        #endregion Fields
 
+        #region Properties
+        public Visibility ShowMinimizeButton
+        {
+            get => _showMinimizeButton;
+            set
+            {
+                _showMinimizeButton = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _showMinimizeButton;
+
+        public Visibility ShowFullscreenButton
+        {
+            get => _showFullscreenButton;
+            set
+            {
+                _showFullscreenButton = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _showFullscreenButton;
+
+        public Visibility ShowCloseButton
+        {
+            get => _showCloseButton;
+            set
+            {
+                _showCloseButton = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _showCloseButton;
+        #endregion Properties
+
+        #region Methods
         protected override Grid BuildBaseWindow()
         {
             // Transparent effect rectangle
@@ -245,6 +290,6 @@ namespace WPFAcrylics
                 _nowFullScreen = true;
             }
         }
-
+        #endregion Methods
     }
 }

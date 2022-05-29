@@ -17,10 +17,11 @@ The project is made with .NET Framework 4.6.1.
 
 ## Usage
 
-**Notes**
-
-- Can only be used with `WindowStyle.None`
-
+Two `Window` derivatives are provided:
+ - `BasicAcrylWindow`
+   - Does not have a titlebar; this allows you to make your own using `WindowChrome`.
+ - `AcrylWindow`
+   - Provides a replica of the built-in titlebar.
 
 Add the namespace in your `xaml`:
 

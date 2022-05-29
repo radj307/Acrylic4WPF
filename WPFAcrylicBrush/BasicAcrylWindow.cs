@@ -12,193 +12,9 @@ using System.Windows.Shapes;
 
 namespace WPFAcrylics
 {
-
-    internal enum AccentState
-    {
-        ACCENT_DISABLED = 1,
-        ACCENT_ENABLE_GRADIENT = 0,
-        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-        ACCENT_ENABLE_BLURBEHIND = 3,
-        ACCENT_INVALID_STATE = 4
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct AccentPolicy
-    {
-        public AccentState AccentState;
-        public int AccentFlags;
-        public int GradientColor;
-        public int AnimationId;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct WindowCompositionAttributeData
-    {
-        public WindowCompositionAttribute Attribute;
-        public IntPtr Data;
-        public int SizeOfData;
-    }
-
-    internal enum WindowCompositionAttribute
-    {
-        // ...
-        WCA_ACCENT_POLICY = 19
-        // ...
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
     public class BasicAcrylWindow : Window, INotifyPropertyChanged
     {
-        // ===== Blur things ========
-
-        [DllImport("user32.dll")]
-        internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
-
-        internal void EnableBlur()
-        {
-            var windowHelper = new WindowInteropHelper(this);
-
-            var accent = new AccentPolicy
-            {
-                AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
-            };
-
-            int accentStructSize = Marshal.SizeOf(accent);
-
-            IntPtr accentPtr = Marshal.AllocHGlobal(accentStructSize);
-            Marshal.StructureToPtr(accent, accentPtr, false);
-
-            var data = new WindowCompositionAttributeData
-            {
-                Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
-                SizeOfData = accentStructSize,
-                Data = accentPtr
-            };
-
-            _ = SetWindowCompositionAttribute(windowHelper.Handle, ref data);
-
-            Marshal.FreeHGlobal(accentPtr);
-        }
-
-
-
-        /// <summary>
-        /// Property for changing the color of the TransparentBackground
-        /// </summary>
-        public Brush? TransparentBackground
-        {
-            get => _transparentBackground;
-            set
-            {
-                _transparentBackground = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Brush? _transparentBackground = null;
-
-
-
-        /// <summary>
-        /// Changes the opacity of the Acrylic transparent background
-        /// </summary>
-        public double AcrylOpacity
-        {
-            get => _acrylOpacity;
-            set
-            {
-                _acrylOpacity = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private double _acrylOpacity;
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Visibility ShowMinimizeButton
-        {
-            get => _showMinimizeButton;
-            set
-            {
-                _showMinimizeButton = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Visibility _showMinimizeButton;
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Visibility ShowFullscreenButton
-        {
-            get => _showFullscreenButton;
-            set
-            {
-                _showFullscreenButton = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Visibility _showFullscreenButton;
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Visibility ShowCloseButton
-        {
-            get => _showCloseButton;
-            set
-            {
-                _showCloseButton = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Visibility _showCloseButton;
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double NoiseRatio
-        {
-            get => _noiseRatio;
-            set
-            {
-                _noiseRatio = value;
-                OnPropertyChanged();
-            }
-        }
-        private double _noiseRatio;
-
-
-
-        /// <summary>
-        /// Event implementation
-        /// </summary>
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new(propertyName));
-
-
-
-        protected readonly Grid _mainGrid;
-        protected readonly Grid _contentGrid;
-        protected readonly string _internalGridName;
-
+        #region Constructor
         /// <summary>
         /// Constructor
         /// </summary>
@@ -222,21 +38,67 @@ namespace WPFAcrylics
 
             Content = BuildBaseWindow();
         }
+        #endregion Constructor
 
-        /// <param name="arg1">The old content</param>
-        /// <param name="arg2">The new content</param>
-        protected override void OnContentChanged(object arg1, object arg2)
+        #region Fields
+        protected readonly Grid _mainGrid;
+        protected readonly Grid _contentGrid;
+        protected readonly string _internalGridName;
+        #endregion Fields
+
+        #region Properties
+        /// <summary>
+        /// Property for changing the color of the TransparentBackground
+        /// </summary>
+        public Brush? TransparentBackground
         {
-            // Do nothing if this is the initialize call
-            if (arg2 is Grid grid && grid.Name == _internalGridName)
+            get => _transparentBackground;
+            set
             {
-                return;
+                _transparentBackground = value;
+                OnPropertyChanged();
             }
-
-            Content = _mainGrid;
-            _contentGrid.Children.Clear();
-            _ = _contentGrid.Children.Add((UIElement)arg2);
         }
+
+        private Brush? _transparentBackground = null;
+
+        /// <summary>
+        /// Changes the opacity of the Acrylic transparent background
+        /// </summary>
+        public double AcrylOpacity
+        {
+            get => _acrylOpacity;
+            set
+            {
+                _acrylOpacity = value;
+                OnPropertyChanged();
+            }
+        }
+        private double _acrylOpacity;
+
+        public double NoiseRatio
+        {
+            get => _noiseRatio;
+            set
+            {
+                _noiseRatio = value;
+                OnPropertyChanged();
+            }
+        }
+        private double _noiseRatio;
+
+        #endregion Properties
+
+        #region Events
+        /// <summary>
+        /// Triggered when a member property setter is called, after the value changes.<br/>
+        /// This is implemented so that this object's properties may be used as WPF data bindings.
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new(propertyName));
+        #endregion Events
+
+        #region Methods
         protected virtual Grid BuildBaseWindow()
         {
             // Transparent effect rectangle
@@ -281,8 +143,35 @@ namespace WPFAcrylics
             return _mainGrid;
         }
 
+        internal void EnableBlur()
+        {
+            var windowHelper = new WindowInteropHelper(this);
+
+            var accent = new AccentPolicy
+            {
+                AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
+            };
+
+            int accentStructSize = Marshal.SizeOf(accent);
+
+            IntPtr accentPtr = Marshal.AllocHGlobal(accentStructSize);
+            Marshal.StructureToPtr(accent, accentPtr, false);
+
+            var data = new WindowCompositionAttributeData
+            {
+                Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
+                SizeOfData = accentStructSize,
+                Data = accentPtr
+            };
+
+            _ = SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+
+            Marshal.FreeHGlobal(accentPtr);
+        }
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e) => EnableBlur();
 
+        #region WindowsAPI
         // ==== Magic code from here: https://blogs.msdn.microsoft.com/llobo/2006/08/01/maximizing-window-with-windowstylenone-considering-taskbar/
         // All credits go to: LesterLobo
         // Code for preventing window to go out of area when maximizing - because windows with no WindowStyle do that; WPF bug
@@ -329,7 +218,28 @@ namespace WPFAcrylics
             Marshal.StructureToPtr(mmi, lParam, true);
         }
 
+        #region pinvoke
+        [DllImport("user32")]
+        internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
+        [DllImport("User32")]
+        internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
+
+        private void Win_SourceInitialized(object? sender, EventArgs e)
+        {
+            IntPtr handle = (new WindowInteropHelper(this)).Handle;
+            HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
+        }
+
+        [DllImport("user32.dll")]
+        internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+        #endregion pinvoke
+
+        #endregion WindowsAPI
+
+        #endregion Methods
+
+        #region TypeDefs
         /// <summary>
         /// POINT aka POINTAPI
         /// </summary>
@@ -455,18 +365,6 @@ namespace WPFAcrylics
 
 
         }
-
-        [DllImport("user32")]
-        internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
-
-        [DllImport("User32")]
-        internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
-
-        private void Win_SourceInitialized(object? sender, EventArgs e)
-        {
-            IntPtr handle = (new WindowInteropHelper(this)).Handle;
-            HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
-        }
-
+        #endregion TypeDefs
     }
 }
