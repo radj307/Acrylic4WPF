@@ -13,6 +13,7 @@
     Height="100"
     d:WindowStyle="None"
     Topmost="True"
+    TransparentBackground="#303030"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -51,15 +52,15 @@
                 FontWeight="Black"
                 WindowChrome.IsHitTestVisibleInChrome="True" />
         </Grid>
-        <StackPanel Grid.Row="1">
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
             <Slider
+                Margin="3"
                 Foreground="WhiteSmoke"
                 Maximum="1"
                 Minimum="0"
                 Value="{Binding AcrylOpacity, ElementName=window, UpdateSourceTrigger=PropertyChanged}" />
             <Slider
                 Margin="3"
-                HorizontalAlignment="Stretch"
                 Foreground="WhiteSmoke"
                 Maximum="1"
                 Minimum="0"

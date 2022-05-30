@@ -8,7 +8,26 @@
     <Application.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
-        <local:TestWindow1 x:Key="BasicAcrylWindow" />
-        <local:TestWindow2 x:Key="AcrylWindow" />
+        <LinearGradientBrush x:Key="GradientBrush1" StartPoint="0.05,0" EndPoint="0.95,1">
+            <GradientStop Offset="0" Color="#00D47A" />
+            <GradientStop Offset="1" Color="#00D4FE" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="GradientBrush2" StartPoint="0.05,0" EndPoint="0.95,1">
+            <GradientStop Offset="0" Color="#33D47A" />
+            <GradientStop Offset="0.5" Color="#FFD4FE" />
+            <GradientStop Offset="1" Color="#40AAEF" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="GradientBrush3" StartPoint="0.2,-0.2" EndPoint="0.8,1.2">
+            <GradientStop Offset="0.142" Color="#8F00" />
+            <GradientStop Offset="0.285" Color="#8FA0" />
+            <GradientStop Offset="0.428" Color="#8FF0" />
+            <GradientStop Offset="0.571" Color="#80F0" />
+            <GradientStop Offset="0.714" Color="#806F" />
+            <GradientStop Offset="0.857" Color="#80DF" />
+            <GradientStop Offset="1" Color="#85F" />
+        </LinearGradientBrush>
+
+        <local:TestWindow1 x:Key="BasicAcrylWindow" TransparentBackground="{StaticResource GradientBrush2}" />
+        <local:TestWindow2 x:Key="AcrylWindow" TransparentBackground="{StaticResource GradientBrush1}" />
     </Application.Resources>
 </Application>

@@ -8,26 +8,24 @@ using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Shell;
 using WPFAcrylics.Enums;
 using WPFAcrylics.Structs;
 
 namespace WPFAcrylics
 {
-
     /// <summary>
-    /// 
+    /// Acrylic-background window <b>without</b> a title bar.<br/>
+    /// This is intended to allow you to create your own title bar using <see cref="WindowChrome"/>.<br/><br/>
+    /// Also has the benefit of being drag-resizable.
     /// </summary>
     public class BasicAcrylWindow : Window, INotifyPropertyChanged
     {
-        // ===== Blur things ========
-
         [DllImport("user32.dll")]
         internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
         internal void EnableBlur()
         {
-            var windowHelper = new WindowInteropHelper(this);
-
             var accent = new AccentPolicy
             {
                 AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
@@ -45,12 +43,14 @@ namespace WPFAcrylics
                 Data = accentPtr
             };
 
-            _ = SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+            _ = SetWindowCompositionAttribute(Handle, ref data);
 
             Marshal.FreeHGlobal(accentPtr);
         }
 
-
+        /// <summary>Commonly called <b>hWnd</b>; the is the Window Handle.</summary>
+        public IntPtr Handle => _handle ??= new WindowInteropHelper(this).EnsureHandle();
+        private IntPtr? _handle;
 
         /// <summary>
         /// Property for changing the color of the TransparentBackground
@@ -325,11 +325,7 @@ namespace WPFAcrylics
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
 
-        private void Win_SourceInitialized(object? sender, EventArgs e)
-        {
-            IntPtr handle = (new WindowInteropHelper(this)).Handle;
-            HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
-        }
+        private void Win_SourceInitialized(object? sender, EventArgs e) => HwndSource.FromHwnd(Handle).AddHook(new HwndSourceHook(WindowProc));
 
     }
 }

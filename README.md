@@ -1,64 +1,53 @@
-# Acrylic4WPF
+# WPFAcrylics
 
-Acrylic4WPF is a remake of the [Acrylic Material](https://docs.microsoft.com/en-us/windows/uwp/design/style/acrylic) design from Microsoft that can only be used in UWP.
+WPFAcrylics is a *(standalone)* expansion to [Acrylic4WPF](https://github.com/Jackjan4/Acrylic4WPF); which itself is a remake of the [Acrylic Material](https://docs.microsoft.com/en-us/windows/uwp/design/style/acrylic) design from Microsoft that requires UWP/UAP.
 
-*This library is based on the work of [bbougot](https://github.com/bbougot/AcrylicWPF). All credits for creating transparency/blur effects go to him.*
-
+*This library is based on the work of [bbougot **(Dead Link)**](https://github.com/bbougot/AcrylicWPF). All credits for creating transparency/blur effects go to him.*
 
 ![Example image; empty window with transparent bg](https://i.imgur.com/GwuNif7.jpg)
-*Example image that shows a nearly empty acrlic window where the buttons, beside the close button, are deactivated*
+*Example image that shows a nearly empty acrlic window where the buttons, beside the close button, are deactivated*  
+![](https://i.imgur.com/qpM14VD.png)
 
 
 ## Download
 
-Just download one of the releases here in GitHub or compile the project for yourself :)
-The project is made with .NET Framework 4.6.1.
+Just download one of the releases here in GitHub or compile the project for yourself :)  
+There are no dependencies outside of WPF.  
+The project is made with .NET Core 6
 
 
 ## Usage
 
-Two `Window` derivatives are provided:
- - `BasicAcrylWindow`
-   - Does not have a titlebar; this allows you to make your own using `WindowChrome`.
- - `AcrylWindow`
-   - Provides a replica of the built-in titlebar.
+ 1. Add the `WPFAcrylics` namespace in your `xaml`:  
+	```xaml
+	  xmlns:ac="clr-namespace:WPFAcrylics;assembly=WPFAcrylics"
+	```
 
-Add the namespace in your `xaml`:
+ 2. In the `xaml` for the `Window` you want to replace:  
+	```xaml
+	<ac:AcrylWindow
+		x:Class="TestApp.TestWindow2"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:ac="clr-namespace:WPFAcrylics;assembly=WPFAcrylics"
+		mc:Ignorable="d">
 
-```xaml
-<acryl:AcrylWindow
-    x:Class="WpfApp1.acrylic"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:acryl="clr-namespace:WPFAcrylics;assembly=WPFAcrylics"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="acrylic"
-    WindowStyle="None"
-    mc:Ignorable="d">
-    <AcrylWindow.Resources>
-    </AcrylWindow.Resources>
+		<Window.Resources>
+			<!-- ... -->
+		</Window.Resources>
+		
+		<Grid>
+			<!-- ... -->
+		</Grid>
+	</ac:AcrylWindow>
+	```  
+	Note that there is also `BasicAcrylWindow`, which doesn't have an implicit title bar allowing you to create your own using `WindowChrome.CaptionHeight`.
 
+	Both window types expose a `Handle` property similar to WinForms.
 
-    <!-- Here we use WindowChrome to create a custom caption bar -->
-    <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="20" ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
-    </WindowChrome.WindowChrome>
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height=""/>
-        </Grid.RowDefinitions>
-
-    <Grid>
-</acryl:AcrylWindow>
-```
-
-When creating a new window in WPF, instead of extending the ````Window```` class you should extend the ````AcrylWindow```` class. You need to to this both in XAML and in Code.
-Styling your other controls like buttons etc. to look acrylic compatible has to be done by yourself, however most work is already done by removing borders and setting transparent backgrounds.
-
-
-## Custimization
+## Customization
 
 - You can change the acrylic opacity with the ````AcrylOpacity```` property
 - Changing the acrylic colored background is possible with the ````TransparentBackground```` property
@@ -68,12 +57,10 @@ Styling your other controls like buttons etc. to look acrylic compatible has to 
 
 ## Critical Information
 
-- Do NOT change WindowStyle in your window, since the TitleBar is redesigned in this libary and changing causes crashes or two TitleBars, instead use the ShowCloseButton, ... properties.
+- `AcrylWindow` cannot be drag-resized due to the implementation of the title bar. `BasicAcrylWindow` can be resized normally.
 - Since WPF has a maximizing bug (maximizing the window larger than the screen actually is), when WindowStyle is set to None, this library uses aditional code the work around this bug. Still, it's not perfect, so display error can occur in rare cases. Mostly, when the user uses your app on two screens.
-- AcrylWindows are not resizable with the mouse yet, since it has to be implemented manually.
 
 
-## Further Information / ToDo
+# License
 
-- Better window drag, when dragging out of maximized state
-- Adding DependencyProperties so, acrylic effects can be made bindable
+Since this 

@@ -16,7 +16,7 @@ using WPFAcrylics.Structs;
 namespace WPFAcrylics
 {
     /// <summary>
-    /// 
+    /// Acrylic-background window with a title bar.
     /// </summary>
     public class AcrylWindow : Window, INotifyPropertyChanged
     {
@@ -27,8 +27,6 @@ namespace WPFAcrylics
 
         internal void EnableBlur()
         {
-            var windowHelper = new WindowInteropHelper(this);
-
             var accent = new AccentPolicy
             {
                 AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
@@ -46,11 +44,16 @@ namespace WPFAcrylics
                 Data = accentPtr
             };
 
-            _ = SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+            _ = SetWindowCompositionAttribute(Handle, ref data);
 
             Marshal.FreeHGlobal(accentPtr);
         }
 
+
+
+        /// <summary>Commonly called <b>hWnd</b>; the is the Window Handle.</summary>
+        public IntPtr Handle => _handle ??= new WindowInteropHelper(this).EnsureHandle();
+        private IntPtr? _handle;
 
 
         /// <summary>
@@ -448,24 +451,16 @@ namespace WPFAcrylics
         // ==== Magic code from here: https://blogs.msdn.microsoft.com/llobo/2006/08/01/maximizing-window-with-windowstylenone-considering-taskbar/
         // All credits go to: LesterLobo
         // Code for preventing window to go out of area when maximizing - because windows with no WindowStyle do that; WPF bug
-
-
-        private static IntPtr WindowProc(
-              IntPtr hwnd,
-              int msg,
-              IntPtr wParam,
-              IntPtr lParam,
-              ref bool handled)
+        private static IntPtr WindowProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch (msg)
             {
             case 0x0024:
-                WmGetMinMaxInfo(hwnd, lParam);
+                WmGetMinMaxInfo(hWnd, lParam);
                 handled = true;
                 break;
             }
-
-            return (IntPtr)0;
+            return IntPtr.Zero;
         }
 
         private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
@@ -473,12 +468,11 @@ namespace WPFAcrylics
             MINMAXINFO mmi = Marshal.PtrToStructure<MINMAXINFO>(lParam);
 
             // Adjust the maximized size and position to fit the work area of the correct monitor
-            int MONITOR_DEFAULTTONEAREST = 0x00000002;
+            const int MONITOR_DEFAULTTONEAREST = 0x00000002;
             IntPtr monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
 
             if (monitor != IntPtr.Zero)
             {
-
                 var monitorInfo = new MONITORINFO();
                 GetMonitorInfo(monitor, monitorInfo);
                 RECT rcWorkArea = monitorInfo.rcWork;
@@ -495,17 +489,10 @@ namespace WPFAcrylics
         [DllImport("user32")]
         internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
-        /// <summary>
-        /// 
-        /// </summary>
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
 
-        private void Win_SourceInitialized(object? sender, EventArgs e)
-        {
-            IntPtr handle = (new WindowInteropHelper(this)).Handle;
-            HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
-        }
+        private void Win_SourceInitialized(object? sender, EventArgs e) => HwndSource.FromHwnd(Handle).AddHook(new HwndSourceHook(WindowProc));
 
     }
 }

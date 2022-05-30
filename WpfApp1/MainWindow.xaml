@@ -42,8 +42,8 @@
                     BorderThickness="0"
                     Click="CloseClick"
                     Content="X"
-                    FontWeight="Black"
-                    Foreground="WhiteSmoke"
+                    FontWeight="Bold"
+                    Foreground="LightGray"
                     WindowChrome.IsHitTestVisibleInChrome="True" />
             </Grid>
         </Border>
